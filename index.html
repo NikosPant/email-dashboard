@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard - January 02, 2026 at 11:58 AM</title>
+    <title>Email Dashboard - January 02, 2026 at 12:00 PM</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -675,14 +675,14 @@
                 </button>
             </div>
             <h1>Email Dashboard</h1>
-            <div class="date">January 02, 2026 at 11:58 AM | Last 24 hours</div>
+            <div class="date">January 02, 2026 at 12:00 PM | Last 24 hours</div>
         </header>
 
         <!-- Stats Overview -->
         <div class="stats-grid animate-in">
             <div class="stat-card">
                 <div class="icon">&#128231;</div>
-                <div class="value">95</div>
+                <div class="value">96</div>
                 <div class="label">Total Emails</div>
             </div>
             <div class="stat-card urgent">
@@ -692,7 +692,7 @@
             </div>
             <div class="stat-card">
                 <div class="icon">&#128172;</div>
-                <div class="value">86</div>
+                <div class="value">87</div>
                 <div class="label">Unread</div>
             </div>
             <div class="stat-card success">
@@ -727,7 +727,33 @@
                 <span class="toggle-icon">&#9660;</span>
             </div>
             <div class="card-body digest">
-                <p>AI summarization unavailable. Please check your API key.</p>
+                <h1>Email Executive Summary - January 2, 2026</h1>
+<h2>Overview</h2>
+<p>You have <strong>96 total emails</strong> with <strong>87 unread</strong>. The breakdown shows:
+- <strong>12 urgent emails</strong> requiring attention
+- <strong>45 newsletters</strong> (financial/investment content)
+- <strong>38 promotional emails</strong>
+- <strong>1 email flagged for action</strong></p>
+<h2>Urgent Matters Requiring Immediate Attention</h2>
+<p>• <strong>Slack confirmation code</strong> (IMI-VIW) - may be time-sensitive for account access
+• <strong>Amazon package delivery</strong> - USB C cable arriving tomorrow in Waterloo
+• <strong>Personal goal setting email</strong> - appears to be work-related performance documentation
+• <strong>LinkedIn job opportunities</strong> - CAO role at Region of Waterloo and VP positions actively recruiting</p>
+<h2>Key Themes</h2>
+<p><strong>Financial Markets Focus</strong>: Heavy concentration of investment newsletters covering:
+- Market volatility concerns for 2026 start
+- FX trading insights and currency analysis
+- Tech stock predictions (Tesla, Meta, SpaceX IPO speculation)
+- Trading strategies and market timing</p>
+<p><strong>Career Development</strong>: Multiple job alerts for senior operations and VP roles, suggesting active professional networking.</p>
+<h2>Recommendations for Today</h2>
+<ol>
+<li><strong>Handle authentication</strong>: Complete Slack confirmation if account access is needed</li>
+<li><strong>Review job opportunities</strong>: The CAO and VP roles appear to match your profile - consider quick review</li>
+<li><strong>Triage financial content</strong>: Focus on the urgent market analysis emails given it's the first trading day of 2026</li>
+<li><strong>Clear promotional clutter</strong>: 38 promotional emails can likely be batch-deleted to reduce inbox noise</li>
+</ol>
+<p><strong>Priority order</strong>: Authentication/delivery items → Job opportunities → Market analysis → Newsletter review</p>
             </div>
         </div>
 
@@ -885,10 +911,15 @@
                 <div class="category-section">
                     <div class="category-header" onclick="toggleCategory(this)">
                         <h3>promotional</h3>
-                        <span class="count">37</span>
+                        <span class="count">38</span>
                         <span class="toggle">&#9660;</span>
                     </div>
                     <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Kick off 2026 with $60 in savings 🙌</div>
+                            <div class="from">Fubo &lt;stream@newsletters.fubo.tv&gt;</div>
+                        </div>
                         
                         <div class="category-email">
                             <div class="subject">Happy 2026! Let’s start the year strong in the VIP Trade Room.</div>
@@ -935,14 +966,9 @@
                             <div class="from">Dividend Channel &lt;info@nl.dividendchannel.com&gt;</div>
                         </div>
                         
-                        <div class="category-email">
-                            <div class="subject">New Year, New Career: Position Yourself for Success in 2026</div>
-                            <div class="from">ExecutiveResume Team &lt;info@executiveresume.ca&gt;</div>
-                        </div>
-                        
                         
                         <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
-                            + 27 more emails
+                            + 28 more emails
                         </div>
                         
                     </div>
@@ -973,9 +999,38 @@
 
         <!-- Insights -->
         
+        <div class="card animate-in">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2>&#128161; Insights & Suggestions</h2>
+                <span class="toggle-icon">&#9660;</span>
+            </div>
+            <div class="card-body">
+                <div class="insights-grid">
+                    
+                    <div class="insight-item">
+                        <h4>Inbox Health Score</h4>
+                        <div class="health-score">
+                            <div class="score-circle">5</div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">
+                                    Moderate
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    
+
+                    
+                </div>
+            </div>
+        </div>
+        
 
         <footer>
-            Generated by Email Dashboard | January 02, 2026 at 11:58 AM
+            Generated by Email Dashboard | January 02, 2026 at 12:00 PM
         </footer>
     </div>
 
@@ -993,7 +1048,7 @@
             
             'notification': 0,
             
-            'promotional': 37,
+            'promotional': 38,
             
             'other': 1,
             
@@ -1036,9 +1091,9 @@
             const priorityCtx = document.getElementById('priorityChart').getContext('2d');
             const priorityData = {
                 'Urgent': 12,
-                'Unread': 86,
+                'Unread': 87,
                 'Action Needed': 1,
-                'Total': 95
+                'Total': 96
             };
 
             new Chart(priorityCtx, {
