@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard - January 02, 2026 at 12:04 PM</title>
+    <title>Email Dashboard - January 02, 2026 at 12:17 PM</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -605,6 +605,99 @@
             color: var(--text-secondary);
         }
 
+        /* Calendar Styles */
+        .calendar-section {
+            margin-bottom: 20px;
+        }
+
+        .calendar-day {
+            margin-bottom: 20px;
+        }
+
+        .calendar-day-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(124, 58, 237, 0.1));
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .calendar-day-header.today {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+        }
+
+        .calendar-day-header h4 {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .calendar-day-header .event-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .calendar-day-header.today .event-count {
+            background: var(--success);
+        }
+
+        .calendar-event {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            background: var(--bg);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calendar-event:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-event .event-time {
+            min-width: 80px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .calendar-event .event-details {
+            flex: 1;
+        }
+
+        .calendar-event .event-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .calendar-event .event-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .calendar-event .event-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .calendar-empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -675,30 +768,35 @@
                 </button>
             </div>
             <h1>Email Dashboard</h1>
-            <div class="date">January 02, 2026 at 12:04 PM | Last 24 hours</div>
+            <div class="date">January 02, 2026 at 12:17 PM | Last 24 hours</div>
         </header>
 
         <!-- Stats Overview -->
         <div class="stats-grid animate-in">
             <div class="stat-card">
                 <div class="icon">&#128231;</div>
-                <div class="value">96</div>
+                <div class="value">100</div>
                 <div class="label">Total Emails</div>
             </div>
             <div class="stat-card urgent">
                 <div class="icon">&#9888;</div>
-                <div class="value">12</div>
+                <div class="value">14</div>
                 <div class="label">Urgent</div>
             </div>
             <div class="stat-card">
                 <div class="icon">&#128172;</div>
-                <div class="value">87</div>
+                <div class="value">91</div>
                 <div class="label">Unread</div>
             </div>
             <div class="stat-card success">
                 <div class="icon">&#9989;</div>
-                <div class="value">1</div>
+                <div class="value">2</div>
                 <div class="label">Action Needed</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">&#128197;</div>
+                <div class="value">1</div>
+                <div class="label">Events This Week</div>
             </div>
         </div>
 
@@ -711,6 +809,49 @@
             <div class="chart-card">
                 <h3>Priority Distribution</h3>
                 <canvas id="priorityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Calendar Events -->
+        <div class="card animate-in">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2>&#128197; This Week's Calendar</h2>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="badge">1 events</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </div>
+            </div>
+            <div class="card-body">
+                
+                <div class="calendar-section">
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-header today">
+                            <h4>Today - Sunday, Jan 04</h4>
+                            <span class="event-count">1 event</span>
+                        </div>
+                        
+                        <div class="calendar-event">
+                            <div class="event-time">
+                                
+                                21:00
+                                
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Degen Chat</div>
+                                
+                                
+                                <div class="event-meta">
+                                    2 attendees
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
             </div>
         </div>
 
@@ -729,26 +870,26 @@
             <div class="card-body digest">
                 <h1>Email Executive Summary - January 2, 2026</h1>
 <h2>Overview</h2>
-<p>You have <strong>96 total emails</strong> with <strong>87 unread</strong>, dominated by newsletters (45) and promotional content (38). Only <strong>12 urgent emails</strong> require attention, with <strong>1 requiring immediate action</strong>.</p>
+<p>You have <strong>100 emails</strong> with <strong>91 unread</strong>. The breakdown shows <strong>14 urgent emails</strong>, <strong>47 newsletters</strong>, <strong>38 promotional emails</strong>, and <strong>2 items requiring action</strong>. The high volume suggests significant backlog from the holiday period.</p>
 <h2>Urgent Matters Requiring Immediate Attention</h2>
-<p>• <strong>Slack confirmation code</strong> (IMI-VIW) - Complete email verification to maintain account access
-• <strong>Amazon package delivery</strong> - USB C cable arriving tomorrow in Waterloo
-• <strong>Personal goal documentation</strong> - Follow up on manufacturing quality metrics and R/1000 tracking initiative
-• <strong>Capital Flows Research</strong> - Active correspondence regarding research services</p>
-<h2>Key Themes Across Communications</h2>
-<p>• <strong>Financial Markets Focus</strong>: Multiple market analysis newsletters covering 2026 predictions, tech stocks, currency movements, and trading strategies
-• <strong>Career Development</strong>: LinkedIn job alerts for VP Operations roles in Canada, including Region of Waterloo CAO position
-• <strong>Investment Research</strong>: Various financial newsletters discussing market conditions, Tesla vs BYD performance, and trading opportunities</p>
+<p>• <strong>Security Alert</strong>: Google detected Claude MCP access to your account - verify this authorization immediately
+• <strong>LinkedIn Job Opportunities</strong>: Multiple VP-level positions including Chief Administrative Officer role at Region of Waterloo
+• <strong>Amazon Package</strong>: USB-C cable shipment arriving tomorrow - track if needed
+• <strong>Slack Confirmation</strong>: Outstanding verification code (IMI-VIW) may expire</p>
+<h2>Key Themes</h2>
+<p>The emails cluster around three main areas:
+- <strong>Financial/Trading Content</strong>: Multiple market analysis newsletters discussing dollar strength, equity futures, and 2026 market predictions
+- <strong>Career Development</strong>: Several high-level operations and executive role alerts from LinkedIn
+- <strong>Personal Organization</strong>: Your own email dashboard system and goal-setting correspondence</p>
 <h2>Recommendations for Today</h2>
-<p><strong>Immediate Actions:</strong>
-• Complete Slack email verification using code IMI-VIW
-• Review personal goals documentation thread for any pending responses
-• Check Amazon delivery status for tomorrow</p>
-<p><strong>This Week:</strong>
-• Review LinkedIn VP Operations opportunities if career change is of interest
-• Scan financial market newsletters for 2026 investment insights
-• Consider unsubscribing from promotional emails (38 total) to reduce inbox clutter</p>
-<p><strong>Low Priority:</strong> The 45 newsletters can be batch-processed when time permits, focusing on financial market content that aligns with your interests.</p>
+<ol>
+<li><strong>Address the Google security alert first</strong> - verify or revoke Claude MCP access</li>
+<li><strong>Complete Slack verification</strong> if you initiated this login attempt</li>
+<li><strong>Review the 2 action items</strong> flagged by your email system</li>
+<li><strong>Scan VP-level job opportunities</strong> from LinkedIn if you're actively job searching</li>
+<li><strong>Archive or batch-process the 47 newsletters</strong> - consider setting up filters to manage this volume going forward</li>
+</ol>
+<p>The promotional emails (38) can be safely ignored or bulk-deleted to reduce clutter.</p>
             </div>
         </div>
 
@@ -764,10 +905,20 @@
                 <div class="category-section">
                     <div class="category-header" onclick="toggleCategory(this)">
                         <h3>urgent</h3>
-                        <span class="count">12</span>
+                        <span class="count">14</span>
                         <span class="toggle">&#9660;</span>
                     </div>
                     <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Your Email Dashboard - January 02, 2026</div>
+                            <div class="from">npantelakis@gmail.com &lt;npantelakis@gmail.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Security alert</div>
+                            <div class="from">Google &lt;no-reply@accounts.google.com&gt;</div>
+                        </div>
                         
                         <div class="category-email">
                             <div class="subject">am/FX: It&#39;s not just X. It&#39;s Y.</div>
@@ -809,19 +960,9 @@
                             <div class="from">Trading Mindset &amp; Data &lt;tradingmindsetanddata@substack.com&gt;</div>
                         </div>
                         
-                        <div class="category-email">
-                            <div class="subject">Shipped: “Retractable USB C Cable,...”</div>
-                            <div class="from">Amazon.ca &lt;shipment-tracking@amazon.ca&gt;</div>
-                        </div>
-                        
-                        <div class="category-email">
-                            <div class="subject">You may be a fit for Region of Waterloo’s Chief Administrative Officer  role - Actively recruiting</div>
-                            <div class="from">LinkedIn &lt;jobs-listings@linkedin.com&gt;</div>
-                        </div>
-                        
                         
                         <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
-                            + 2 more emails
+                            + 4 more emails
                         </div>
                         
                     </div>
@@ -836,10 +977,20 @@
                 <div class="category-section">
                     <div class="category-header" onclick="toggleCategory(this)">
                         <h3>newsletter</h3>
-                        <span class="count">45</span>
+                        <span class="count">47</span>
                         <span class="toggle">&#9660;</span>
                     </div>
                     <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Why We Are Dollar Bulls</div>
+                            <div class="from">Michael Howell from Capital Wars &lt;capitalwars@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Slow Dopa</div>
+                            <div class="from">Scott Galloway &lt;nomercynomalice@mail.profgalloway.com&gt;</div>
+                        </div>
                         
                         <div class="category-email">
                             <div class="subject">[GitHub] A first-party GitHub OAuth application has been added to your account</div>
@@ -881,19 +1032,9 @@
                             <div class="from">The Chart Report &lt;info@thechartreport.com&gt;</div>
                         </div>
                         
-                        <div class="category-email">
-                            <div class="subject">The Durden Dispatch</div>
-                            <div class="from">ZeroHedge &lt;newsletter@zerohedge.com&gt;</div>
-                        </div>
-                        
-                        <div class="category-email">
-                            <div class="subject">Market Bullets: Tesla outstripped by BYD, Stellantis and TSMC pop 3% premarket, Trump delays furniture tariffs</div>
-                            <div class="from">Stock Analysis &lt;contact@stockanalysis.com&gt;</div>
-                        </div>
-                        
                         
                         <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
-                            + 35 more emails
+                            + 37 more emails
                         </div>
                         
                     </div>
@@ -910,6 +1051,16 @@
                         <span class="toggle">&#9660;</span>
                     </div>
                     <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Nikos Pantelakis, you have an unused Prime benefit</div>
+                            <div class="from">Amazon Music &lt;no-reply@msg.amazonmusic.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">⭐Prediction Markets: a Simple, Replicable Strategy Using Real Data</div>
+                            <div class="from">Forecaster Terminal &lt;info@forecaster.biz&gt;</div>
+                        </div>
                         
                         <div class="category-email">
                             <div class="subject">Kick off 2026 with $60 in savings 🙌</div>
@@ -949,16 +1100,6 @@
                         <div class="category-email">
                             <div class="subject">Your First Big Trading Advantage of 2026 Starts Here</div>
                             <div class="from">Trading Indicators &lt;info@tradingindicators.com&gt;</div>
-                        </div>
-                        
-                        <div class="category-email">
-                            <div class="subject">Hi everyone, im looking for a hvac technician for my...</div>
-                            <div class="from">Lexington Trending Posts &lt;reply@rs.ca.nextdoor.com&gt;</div>
-                        </div>
-                        
-                        <div class="category-email">
-                            <div class="subject">Life-Changing Dividends for 2026: 7 Funds Paying Up to 33.5%</div>
-                            <div class="from">Dividend Channel &lt;info@nl.dividendchannel.com&gt;</div>
                         </div>
                         
                         
@@ -1005,13 +1146,11 @@
                     <div class="insight-item">
                         <h4>Inbox Health Score</h4>
                         <div class="health-score">
-                            <div class="score-circle">3</div>
+                            <div class="score-circle">5</div>
                             <div>
                                 <div style="font-weight: 600; margin-bottom: 4px;">
-                                    Needs Attention
+                                    Moderate
                                 </div>
-                                
-                                <div class="score-label">~45 min to clear urgent</div>
                                 
                             </div>
                         </div>
@@ -1019,49 +1158,7 @@
                     
 
                     
-                    <div class="insight-item">
-                        <h4>Patterns Observed</h4>
-                        <ul class="insight-list">
-                            
-                            <li>High volume of newsletters (47% of total emails)</li>
-                            
-                            <li>Significant promotional email influx (40% of total emails)</li>
-                            
-                            <li>Extremely high unread rate (91% of emails unread)</li>
-                            
-                            <li>Nextdoor notifications are the highest volume sender</li>
-                            
-                            <li>LinkedIn job alerts generating frequent emails</li>
-                            
-                            <li>Multiple retail/promotional senders active</li>
-                            
-                            <li>Very low action-required email ratio (1% needs action)</li>
-                            
-                        </ul>
-                    </div>
-                    
 
-                    
-                    <div class="insight-item">
-                        <h4>Suggestions</h4>
-                        <ul class="insight-list">
-                            
-                            <li>Consider unsubscribing from high-volume newsletter senders like Nextdoor</li>
-                            
-                            <li>Set up automatic filtering for LinkedIn job alerts to separate folder</li>
-                            
-                            <li>Create promotional email filter to auto-archive retail communications</li>
-                            
-                            <li>Batch process newsletter reading to specific times rather than inbox checking</li>
-                            
-                            <li>Set up VIP list for important personal contacts like npantelakis@gmail.com</li>
-                            
-                            <li>Consider digest options for frequent senders instead of individual emails</li>
-                            
-                            <li>Implement inbox zero strategy focusing on the 12 urgent items first</li>
-                            
-                        </ul>
-                    </div>
                     
                 </div>
             </div>
@@ -1069,7 +1166,7 @@
         
 
         <footer>
-            Generated by Email Dashboard | January 02, 2026 at 12:04 PM
+            Generated by Email Dashboard | January 02, 2026 at 12:17 PM
         </footer>
     </div>
 
@@ -1077,13 +1174,13 @@
         // Category data for charts
         const categoryData = {
             
-            'urgent': 12,
+            'urgent': 14,
             
             'work': 0,
             
             'personal': 0,
             
-            'newsletter': 45,
+            'newsletter': 47,
             
             'notification': 0,
             
@@ -1129,10 +1226,10 @@
             // Priority Bar Chart
             const priorityCtx = document.getElementById('priorityChart').getContext('2d');
             const priorityData = {
-                'Urgent': 12,
-                'Unread': 87,
-                'Action Needed': 1,
-                'Total': 96
+                'Urgent': 14,
+                'Unread': 91,
+                'Action Needed': 2,
+                'Total': 100
             };
 
             new Chart(priorityCtx, {
