@@ -3,34 +3,1140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard</title>
+    <title>Email Dashboard - January 02, 2026 at 11:58 AM</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --accent: #10b981;
+            --urgent: #ef4444;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --bg: #f1f5f9;
+            --bg-dark: #0f172a;
+            --card-bg: #ffffff;
+            --card-bg-dark: #1e293b;
+            --text: #1e293b;
+            --text-dark: #f1f5f9;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --border-dark: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg: var(--bg-dark);
+            --card-bg: var(--card-bg-dark);
+            --text: var(--text-dark);
+            --border: var(--border-dark);
+        }
+
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
         .container {
-            padding: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        h1 { margin: 0 0 20px 0; }
-        p { opacity: 0.9; }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, #7c3aed 100%);
+            color: white;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        header .date {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+
+        .stat-card.urgent::before {
+            background: linear-gradient(90deg, var(--urgent), #f87171);
+        }
+
+        .stat-card.success::before {
+            background: linear-gradient(90deg, var(--success), #4ade80);
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.urgent .value {
+            background: linear-gradient(135deg, var(--urgent), #f87171);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .stat-card .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+
+        .card-header:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header .toggle-icon {
+            transition: transform 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .card-header.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge.urgent {
+            background: linear-gradient(135deg, var(--urgent), #f87171);
+        }
+
+        .badge.success {
+            background: linear-gradient(135deg, var(--success), #4ade80);
+        }
+
+        .card-body {
+            padding: 25px;
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s;
+        }
+
+        .card-body.collapsed {
+            max-height: 0;
+            padding: 0 25px;
+        }
+
+        /* Search Box */
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Action Items */
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-item.high {
+            border-left-color: var(--urgent);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .action-item.medium {
+            border-left-color: var(--warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .action-item .urgency-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .action-item .urgency-badge.high {
+            background: var(--urgent);
+            color: white;
+        }
+
+        .action-item .urgency-badge.medium {
+            background: var(--warning);
+            color: white;
+        }
+
+        .action-item .urgency-badge.low {
+            background: var(--success);
+            color: white;
+        }
+
+        .action-item .content {
+            flex: 1;
+        }
+
+        .action-item .action-text {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .action-item .meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Priority Emails */
+        .email-item {
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            background: var(--bg);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .email-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .email-item .score {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .email-item .score.high {
+            background: linear-gradient(135deg, var(--urgent), #f87171);
+        }
+
+        .email-item .score.medium {
+            background: linear-gradient(135deg, var(--warning), #fbbf24);
+        }
+
+        .email-item .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .email-item .subject {
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-item .from {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .email-item .reason {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* Digest */
+        .digest {
+            line-height: 1.9;
+        }
+
+        .digest h3 {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .digest ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .digest li {
+            margin-bottom: 8px;
+        }
+
+        .digest p {
+            margin-bottom: 15px;
+        }
+
+        /* Category Section */
+        .category-section {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            background: var(--bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .category-header:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .category-header h3 {
+            flex: 1;
+            font-size: 1rem;
+            text-transform: capitalize;
+            font-weight: 600;
+        }
+
+        .category-header .count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .category-header .toggle {
+            margin-left: 12px;
+            transition: transform 0.3s;
+        }
+
+        .category-header.collapsed .toggle {
+            transform: rotate(-90deg);
+        }
+
+        .category-emails {
+            padding: 10px 0 10px 20px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .category-emails.collapsed {
+            max-height: 0;
+            padding: 0 0 0 20px;
+        }
+
+        .category-email {
+            padding: 12px;
+            border-left: 3px solid var(--border);
+            margin-bottom: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .category-email:hover {
+            border-left-color: var(--primary);
+        }
+
+        .category-email .subject {
+            font-weight: 500;
+        }
+
+        .category-email .from {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        /* Insights */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .insight-item {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(124, 58, 237, 0.05));
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .insight-item h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .insight-list {
+            list-style: none;
+        }
+
+        .insight-list li {
+            padding: 10px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insight-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .insight-list li:last-child {
+            border-bottom: none;
+        }
+
+        .health-score {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .health-score .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .health-score .score-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            header {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 18px;
+            }
+
+            .stat-card .value {
+                font-size: 1.8rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .header-controls {
+                position: static;
+                margin-top: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Email Dashboard</h1>
-        <p>Your daily email summary will appear here.</p>
-        <p>Dashboard is being set up...</p>
+        <header class="animate-in">
+            <div class="header-controls">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">&#9790;</span>
+                </button>
+            </div>
+            <h1>Email Dashboard</h1>
+            <div class="date">January 02, 2026 at 11:58 AM | Last 24 hours</div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid animate-in">
+            <div class="stat-card">
+                <div class="icon">&#128231;</div>
+                <div class="value">95</div>
+                <div class="label">Total Emails</div>
+            </div>
+            <div class="stat-card urgent">
+                <div class="icon">&#9888;</div>
+                <div class="value">12</div>
+                <div class="label">Urgent</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">&#128172;</div>
+                <div class="value">86</div>
+                <div class="label">Unread</div>
+            </div>
+            <div class="stat-card success">
+                <div class="icon">&#9989;</div>
+                <div class="value">1</div>
+                <div class="label">Action Needed</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid animate-in">
+            <div class="chart-card">
+                <h3>Emails by Category</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Priority Distribution</h3>
+                <canvas id="priorityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Action Items -->
+        
+
+        <!-- Priority Emails -->
+        
+
+        <!-- Executive Digest -->
+        <div class="card animate-in">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2>&#128221; Executive Digest</h2>
+                <span class="toggle-icon">&#9660;</span>
+            </div>
+            <div class="card-body digest">
+                <p>AI summarization unavailable. Please check your API key.</p>
+            </div>
+        </div>
+
+        <!-- Emails by Category -->
+        <div class="card animate-in">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2>&#128193; Emails by Category</h2>
+                <span class="toggle-icon">&#9660;</span>
+            </div>
+            <div class="card-body">
+                
+                
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <h3>urgent</h3>
+                        <span class="count">12</span>
+                        <span class="toggle">&#9660;</span>
+                    </div>
+                    <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">am/FX: It&#39;s not just X. It&#39;s Y.</div>
+                            <div class="from">Brent Donnelly &lt;bdonnelly@spectramarkets.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Re: Quick favor from Capital Flows Research</div>
+                            <div class="from">Capital Flows &lt;capitalflowsresearch@gmail.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Slack confirmation code: IMI-VIW</div>
+                            <div class="from">Slack &lt;no-reply-PalDRFeoByABsqYKH3Q4GDGz@slack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">First Call January 2, 2026</div>
+                            <div class="from">Thomas Thornton &lt;info@hedgefundtelemetry.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Here’s CA$80 to give a friend</div>
+                            <div class="from">Jonathan Lansky from No Straight Lines Investments &lt;nostraightlinesinvestments@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Re: Goals</div>
+                            <div class="from">Nikos &lt;npantelakis@gmail.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Goals</div>
+                            <div class="from">Nikos &lt;npantelakis@gmail.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Market Prep: Critical Moment for the Markets Ahead</div>
+                            <div class="from">Trading Mindset &amp; Data &lt;tradingmindsetanddata@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Shipped: “Retractable USB C Cable,...”</div>
+                            <div class="from">Amazon.ca &lt;shipment-tracking@amazon.ca&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">You may be a fit for Region of Waterloo’s Chief Administrative Officer  role - Actively recruiting</div>
+                            <div class="from">LinkedIn &lt;jobs-listings@linkedin.com&gt;</div>
+                        </div>
+                        
+                        
+                        <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
+                            + 2 more emails
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <h3>newsletter</h3>
+                        <span class="count">45</span>
+                        <span class="toggle">&#9660;</span>
+                    </div>
+                    <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">[GitHub] A first-party GitHub OAuth application has been added to your account</div>
+                            <div class="from">GitHub &lt;noreply@github.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">“vice president operations”: FairWind - Head of Operations &amp; Business Development, Canada and more</div>
+                            <div class="from">LinkedIn Job Alerts &lt;jobalerts-noreply@linkedin.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Your broker doesn&#39;t want you knowing this</div>
+                            <div class="from">Andrew Pancholi &lt;support@cyclesanalysis.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">💬 New thread from Capital Flows</div>
+                            <div class="from">Capital Flows &lt;capitalflows@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">💬 New thread from Le Shrub</div>
+                            <div class="from">Le Shrub from Reminiscences of a Shrub Operator &lt;shrubbery@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">SpaceX, OpenAI, Anthropic: The IPO Wave That Could Pop the Bubble</div>
+                            <div class="from">Stocks &amp; Income &lt;stocks-income@mail.beehiiv.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">“operations manager”: Recurrent Energy - Supervisor, Operations Control Centre (OCC) and more</div>
+                            <div class="from">LinkedIn Job Alerts &lt;jobalerts-noreply@linkedin.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">The Dollar’s Decision 🌤️ The Morning Print</div>
+                            <div class="from">The Chart Report &lt;info@thechartreport.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">The Durden Dispatch</div>
+                            <div class="from">ZeroHedge &lt;newsletter@zerohedge.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Market Bullets: Tesla outstripped by BYD, Stellantis and TSMC pop 3% premarket, Trump delays furniture tariffs</div>
+                            <div class="from">Stock Analysis &lt;contact@stockanalysis.com&gt;</div>
+                        </div>
+                        
+                        
+                        <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
+                            + 35 more emails
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <h3>promotional</h3>
+                        <span class="count">37</span>
+                        <span class="toggle">&#9660;</span>
+                    </div>
+                    <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Happy 2026! Let’s start the year strong in the VIP Trade Room.</div>
+                            <div class="from">Roger Scott &lt;Roger@p.rogerscott.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Prometheus ETF Program</div>
+                            <div class="from">Prometheus Research &lt;prometheusresearch+etf-portfolio@substack.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Base Case 2026</div>
+                            <div class="from">Longbow Arrows &lt;info@mylongbow.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">You’re Invited To Our 2026 Market Outlook: Prepare, Profit, Prosper</div>
+                            <div class="from">Simon Ree &lt;info@taooftrading.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">TradesViz Trading Analysis, Simulation &amp; Planning: Happy New Year 2026! 50% OFF Inside + Next Feature &amp; Journaling Simplified</div>
+                            <div class="from">TradesViz &lt;support@tradesviz.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Choose a hotel with free cancellation options</div>
+                            <div class="from">Expedia.ca &lt;mail@eg.expedia.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Your First Big Trading Advantage of 2026 Starts Here</div>
+                            <div class="from">Trading Indicators &lt;info@tradingindicators.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Hi everyone, im looking for a hvac technician for my...</div>
+                            <div class="from">Lexington Trending Posts &lt;reply@rs.ca.nextdoor.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">Life-Changing Dividends for 2026: 7 Funds Paying Up to 33.5%</div>
+                            <div class="from">Dividend Channel &lt;info@nl.dividendchannel.com&gt;</div>
+                        </div>
+                        
+                        <div class="category-email">
+                            <div class="subject">New Year, New Career: Position Yourself for Success in 2026</div>
+                            <div class="from">ExecutiveResume Team &lt;info@executiveresume.ca&gt;</div>
+                        </div>
+                        
+                        
+                        <div class="category-email" style="color: var(--text-secondary); font-style: italic;">
+                            + 27 more emails
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <h3>other</h3>
+                        <span class="count">1</span>
+                        <span class="toggle">&#9660;</span>
+                    </div>
+                    <div class="category-emails">
+                        
+                        <div class="category-email">
+                            <div class="subject">Bundles About to Sell Out ‼️</div>
+                            <div class="from">Caraway &lt;welcome@carawayhome.com&gt;</div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+
+        <!-- Insights -->
+        
+
+        <footer>
+            Generated by Email Dashboard | January 02, 2026 at 11:58 AM
+        </footer>
     </div>
+
+    <script>
+        // Category data for charts
+        const categoryData = {
+            
+            'urgent': 12,
+            
+            'work': 0,
+            
+            'personal': 0,
+            
+            'newsletter': 45,
+            
+            'notification': 0,
+            
+            'promotional': 37,
+            
+            'other': 1,
+            
+        };
+
+        // Initialize charts
+        function initCharts() {
+            // Category Pie Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryData).map(k => k.charAt(0).toUpperCase() + k.slice(1)),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: [
+                            '#ef4444', '#6366f1', '#10b981', '#f59e0b',
+                            '#8b5cf6', '#ec4899', '#14b8a6'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            // Priority Bar Chart
+            const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+            const priorityData = {
+                'Urgent': 12,
+                'Unread': 86,
+                'Action Needed': 1,
+                'Total': 95
+            };
+
+            new Chart(priorityCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(priorityData),
+                    datasets: [{
+                        label: 'Count',
+                        data: Object.values(priorityData),
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(148, 163, 184, 0.8)'
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Toggle card collapse
+        function toggleCard(header) {
+            header.classList.toggle('collapsed');
+            const body = header.nextElementSibling;
+            body.classList.toggle('collapsed');
+        }
+
+        // Toggle category collapse
+        function toggleCategory(header) {
+            header.classList.toggle('collapsed');
+            const emails = header.nextElementSibling;
+            emails.classList.toggle('collapsed');
+        }
+
+        // Filter items
+        function filterItems(input, className) {
+            const filter = input.value.toLowerCase();
+            const items = input.closest('.card-body').querySelectorAll('[data-searchable]');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? '' : 'none';
+            });
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                icon.innerHTML = '&#9790;';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.innerHTML = '&#9728;';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').innerHTML = '&#9728;';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            loadTheme();
+        });
+    </script>
 </body>
 </html>
